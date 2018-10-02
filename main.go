@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -11,12 +10,6 @@ import (
 	"github.com/sasimpson/goparent/datastore"
 	"google.golang.org/appengine"
 )
-
-func cors(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Access-Control-Allow-Origin", "*")
-	w.Header().Add("Content-Type", "text/plain")
-	fmt.Fprintf(w, "ok")
-}
 
 //This file is specifically for running in GCP AppEngine.
 func main() {
