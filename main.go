@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gorilla/handlers"
@@ -32,14 +31,10 @@ func main() {
 	}
 
 	r := api.BuildAPIRouting(&serviceHandler)
-
-	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Accept", "Content-Type", "Authorization"})
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Accept", "Content-Type", "Authorization", "Origin"})
 	originsOk := handlers.AllowedOrigins([]string{"*"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"})
-	r.Use(handlers.CORS(originsOk, headersOk, methodsOk))
 
-	log.Printf("starting appengine service...")
-	http.Handle("/", r)
-
+	http.Handle("/", handlers.CORS(originsOk, headersOk, methodsOk)(r)) //wire mux to DefaultServeMux for appengine
 	appengine.Main()
 }
