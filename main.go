@@ -1,14 +1,22 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
+	"github.com/gorilla/handlers"
 	"github.com/sasimpson/goparent"
 	"github.com/sasimpson/goparent/api"
 	"github.com/sasimpson/goparent/datastore"
 	"google.golang.org/appengine"
 )
+
+func cors(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Content-Type", "text/plain")
+	fmt.Fprintf(w, "ok")
+}
 
 //This file is specifically for running in GCP AppEngine.
 func main() {
@@ -31,7 +39,14 @@ func main() {
 	}
 
 	r := api.BuildAPIRouting(&serviceHandler)
+
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Accept", "Content-Type", "Authorization"})
+	originsOk := handlers.AllowedOrigins([]string{"*"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"})
+	r.Use(handlers.CORS(originsOk, headersOk, methodsOk))
+
 	log.Printf("starting appengine service...")
 	http.Handle("/", r)
+
 	appengine.Main()
 }
