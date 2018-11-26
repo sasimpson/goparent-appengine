@@ -22,6 +22,30 @@ indexes:
   - name: TimeStamp
     direction: desc
 
+- kind: Sleep
+  properties:
+  - name: ChildID
+  - name: Start
+    direction: desc
+
+- kind: Sleep
+  properties:
+  - name: ChildID
+  - name: TimeStamp
+    direction: desc
+
+- kind: Sleep
+  ancestor: yes
+  properties:
+  - name: Start
+    direction: desc
+
+- kind: Sleep
+  ancestor: yes
+  properties:
+  - name: TimeStamp
+    direction: desc
+
 - kind: Waste
   properties:
   - name: ChildID
